@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "webpack-dev-server --content-base dist --hot --mode development",
+    "start": "webpack-dev-server --https --content-base dist --hot --mode development",
     "build": "webpack --mode production"
   },
   "author": "",
@@ -23,6 +23,8 @@
     "@babel/core": "^7.3.3",
     "@babel/preset-env": "^7.3.1",
     "babel-loader": "^8.0.5",
-    "lab.js": "^2018.1.1"
+    "file-loader": "^4.0.0",
+    "lab.js": "^2018.1.1",
+    "url-loader": "^2.0.1"
   }
 }

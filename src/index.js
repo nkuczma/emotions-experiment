@@ -1,17 +1,15 @@
 'use strict'
 import './css/index.css';
-const lab = require('lab.js/dist/lab.dev.js');
+import 'lab.js/dist/lab.css';
+import CameraModule from './js/camera';
+import ExperimentModule from './js/experiment';
 
-// Define a component
-var experiment = new lab.flow.Sequence({
-    content: [
-      new lab.html.Screen({
-        content: 'The experiment is running!',
-      }),
-    ],
-  })
-
-// Run it
-experiment.run();
 
 console.log("I'm alive");
+
+let cam = CameraModule();
+// cam.initializeCamera();
+
+let experiment = ExperimentModule();
+experiment.initializeExperiment();
+experiment.startExperiment();

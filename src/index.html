@@ -5,23 +5,37 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Eksperyment</title>
+    <script
+      src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous">
+    </script>
   </head>
   <body>
-
-      <h1>EKSPERYMENT</h1>
-        <!-- If you'd rather have a container with a fixed width
-       and variable height, try removing the fullscreen class below -->
-      <div class="container fullscreen">
-        <main
-          class="content-vertical-center content-horizontal-center"
-          data-labjs-section="main"
-        >
-          <!-- the nested div is helpful because the centering would
-              otherwise break the natural flow of content -->
-          <div>
-          </div>
-
+  <div class="video-section"> 
+    <!--camera  -->
+    <div id="results" class="alert alert-success">
+        Wyniki
+      <img src="assets/img/Car.jpg" />
       </div>
-    </main>
+      <canvas style="display:none;"></canvas>
+      <video muted autoplay></video>
+    </div>
+    <div class="camera-input">
+      <label for="videoSource">Video source: </label>
+      <select id="videoSource" class="form-control"></select>
+    </div>
+    <!--  -->
+    <div class="container fullscreen">
+      <header class="content-vertical-center content-horizontal-center">
+        <div>
+          Eksperyment
+        </div>
+      </header>
+      <main
+        class="content-vertical-center content-horizontal-center"
+        data-labjs-section="main"
+      ></main>
+      </div>
   </body>
 </html>
