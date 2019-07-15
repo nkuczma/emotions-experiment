@@ -1,0 +1,47 @@
+.emotion-scale select {
+    max-height: 0;
+    visibility: hidden;
+  }
+  
+  .emotion-scale-container.active,
+  .emotion-scale-container:focus {
+    outline: none;
+  }
+  
+  .emotion-scale-container {
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .emotion-scale.center .emotion-scale-container {
+    justify-content: center;
+    align-items: center;
+  }
+  .emotion-scale.vertical .emotion-scale-container {
+    display: flex;
+    flex-direction: column-reverse;
+  }
+  
+  .emotion-scale-item {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  
+  .emotion-scale-item svg {
+    transition: fill 0.3s;
+  }
+  
+  .emotion-scale-item:not(.highlight):not(:hover) svg {
+    fill: rgb(192, 192, 192) !important;
+  }
+  .emotion-scale-item:not(.highlight) {
+    opacity: 0.6;
+  }
+  
+  
+  
+  .emotion-scale.motion .emotion-scale-item:not(.highlight) {
+    display: none;
+  }

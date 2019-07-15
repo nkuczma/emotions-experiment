@@ -1,5 +1,7 @@
 const HtmlWebPackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 module.exports = {
     module: {
         rules: [
@@ -26,7 +28,7 @@ module.exports = {
             {
                 test: /\.(jpe?g|png|gif|woff|woff2|eot|ttf|svg)(\?[a-z0-9=.]+)?$/,
                 loader: 'url-loader?limit=100000' 
-            }
+            },
         ]
     },
     plugins: [
@@ -37,7 +39,8 @@ module.exports = {
         new MiniCssExtractPlugin({
             filename: "[name].css",
             chunkFilename: "[id].css"
-        })
+        }),
+        new CopyWebpackPlugin([ { from: 'src/assets', to: 'assets' } ])
     ],
     devtool: 'inline-source-map'
 };

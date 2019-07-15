@@ -1,5 +1,6 @@
 'use strict'
 import './css/index.css';
+import './css/emotion-simple.css';
 import 'lab.js/dist/lab.css';
 import CameraModule from './js/camera';
 import ExperimentModule from './js/experiment';
