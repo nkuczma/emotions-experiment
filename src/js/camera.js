@@ -51,8 +51,17 @@ function cameraModule() {
     }
   }
 
+  function setTimeoutForPhotos() {
+    let x = 0;
+    setInterval(function(){ 
+      x++; console.log(x); 
+      $('#results').html(x);
+    }, 3000);
+  }
+
   return {
-    initializeCamera
+    initializeCamera,
+    setTimeoutForPhotos
   }
 }
 export default cameraModule;

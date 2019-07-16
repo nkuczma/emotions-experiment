@@ -1,8 +1,5 @@
-NodeList.prototype.forEach = function (callback) {
-  Array.prototype.forEach.call(this, callback);
-}
 
-var emotionScaleDefaultConfig = {
+export var emotionScaleDefaultConfig = {
   assetsDirectory: "assets/",
   items: [
     {
@@ -33,7 +30,8 @@ var emotionScaleDefaultConfig = {
   ]
 };
 
-class EmotionScale {
+export class EmotionScale {
+  
   constructor(config) {
     this.config = config || emotionScaleDefaultConfig;
   }
@@ -156,10 +154,10 @@ class EmotionScale {
   }
 }
 
-var buffor = [];
-var maxBuffor = 10;
+export var buffor = [];
+export var maxBuffor = 10;
 
-function movingWeightedAverage(array) {
+export function movingWeightedAverage(array) {
   let nominator = 0;
   let denominator = 0;
   let length = array.length;
@@ -170,7 +168,7 @@ function movingWeightedAverage(array) {
   return nominator/denominator;
 }
 
-function handleMotion(event, emotionScale) {
+export function handleMotion(event, emotionScale) {
   var acceleration = event.accelerationIncludingGravity;
   var tresholds = [-10, -1, 2, 5, 7, 10];
   // TODO: different api handlers
