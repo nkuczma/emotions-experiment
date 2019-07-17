@@ -2,7 +2,6 @@ function cameraModule() {
 
   let videoElement = document.querySelector('video');
   let videoSelect = document.querySelector('#videoSource');
-  let takePhotoTimer;
 
   function initializeCamera() {
     
@@ -51,12 +50,22 @@ function cameraModule() {
     }
   }
 
-  function setTimeoutForPhotos() {
+  function takePhoto(){
+    const canvas = document.createElement('canvas');
+    canvas.width = videoElement.videoWidth;
+    canvas.height = videoElement.videoHeight;
+    canvas.getContext('2d').drawImage(videoElement, 0, 0);
+    var img = canvas.toDataURL('image/jpeg');
+    console.log(img);
+  }
+
+  function setTimeoutForPhotos(time) {
     let x = 0;
     setInterval(function(){ 
+      takePhoto();
       x++; console.log(x); 
       $('#results').html(x);
-    }, 3000);
+    }, time);
   }
 
   return {

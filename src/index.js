@@ -10,8 +10,8 @@ console.log("I'm alive");
 
 let cam = CameraModule();
 cam.initializeCamera();
-// cam.setTimeoutForPhotos();
+cam.setTimeoutForPhotos(3000);
 
-// let experiment = ExperimentModule();
-// experiment.initializeExperiment();
-// experiment.startExperiment();
+let experiment = ExperimentModule();
+experiment.initializeExperiment();
+experiment.startExperiment();
