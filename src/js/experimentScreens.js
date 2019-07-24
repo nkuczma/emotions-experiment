@@ -1,5 +1,7 @@
 const lab = require('lab.js/dist/lab.dev.js');
 import { EmotionScale} from './response-widgets/emotion-scale.js';
+import { ValenceArousal } from './response-widgets/valence-arousal.js';
+
 
 export function welcomeScreen() {
 
@@ -41,7 +43,59 @@ export function welcomeScreen() {
 
 }
 
-export function loopWithEmotionsSimpleWidget(loopImages) {
+export function loopWithValenceArousaleWidget(loopImages, store) {
+
+  const loopSequence =  new lab.flow.Sequence({
+    content: [
+      new lab.html.Screen({
+        content: '.',
+        timeout: 500,
+      }),
+      new lab.html.Screen({
+        content: '<img class="img-fluid" src="${ parameters.image }">',
+        timeout: 2000,
+        messageHandlers: {
+          'run': function() { console.log('show photo');} }
+      }),
+      new lab.html.Screen({
+        content: '<div id="valence-arousal"></div>',
+        timeout: 2000,
+        messageHandlers: {
+          'run': function() {
+
+            // initialize widget
+            let valenceArousal = new ValenceArousal();
+            let valenceValue = 0;
+            let arousalValue = 0;
+
+            valenceArousal.onChange((value) => {
+              store.setResult({
+                'imageUrl': this.parent.options.parameters.imageName,
+                'valence': value.valence,
+                'arousal': value.arousal,
+              });
+            });
+
+            valenceArousal.init(window.document.getElementById('valence-arousal'));
+
+          },
+          'end': () => {
+            store.updateResult();
+          }
+        },
+      })
+    ]
+  });
+
+  const experiment = new lab.flow.Loop({
+    template: loopSequence,
+    templateParameters: loopImages
+  });
+
+  return experiment;
+}
+
+export function loopWithEmotionsSimpleWidget(loopImages, store) {
 
   const loopSequence =  new lab.flow.Sequence({
     content: [
@@ -59,24 +113,19 @@ export function loopWithEmotionsSimpleWidget(loopImages) {
         content: '<div id="emotion-input" class="emotion-scale center vertical"></div>',
         messageHandlers: {
           'run': function() {
-            // initialize widget\
-            console.log('check input');
             let emotionScale = new EmotionScale();
             emotionScale.setAssetsDirectory('../../assets/emotions-simple/');
             emotionScale.onChange((result) => {
-              experiment.datastore.set({
+              store.setResult({
                 'imageUrl': this.parent.options.parameters.imageName,
                 'emotion': result,
               });
-              console.log(result);
             });
   
             emotionScale.init(window.document.getElementById('emotion-input'));
           },
           'end': () => {
-            console.log('end checking');
-            experiment.datastore.commit();
-            experiment.datastore.show();
+            store.updateResult();
           }
         },
         timeout: 2000,
@@ -86,25 +135,12 @@ export function loopWithEmotionsSimpleWidget(loopImages) {
       })
     ]
   });
-
   
   const experiment = new lab.flow.Loop({
     template: loopSequence,
     templateParameters: loopImages
   });
 
-  experiment.datastore = new lab.data.Store();
-
-  experiment.on('end', () => {
-    // experiment.datastore.download();
-  });
-
   return experiment;
 }
-
-export function saveResults() {
-//TODO
-}
-
-
 

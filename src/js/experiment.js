@@ -1,6 +1,7 @@
 const lab = require('lab.js/dist/lab.dev.js');
-import './experimentScreens.js';
-import { mainExperimentScreen, welcomeScreen, loopWithEmotionsSimpleWidget } from './experimentScreens.js';
+import { resultModule } from './resultModule.js';
+import { welcomeScreen, loopWithEmotionsSimpleWidget, loopWithValenceArousaleWidget } from './experimentScreens.js';
+
 
 function importAll(r) {
   return r.keys().map(r).map((image, i) => { 
@@ -17,11 +18,16 @@ function experimentModule() {
   let experiment;
 
   function initializeExperiment() {
+    const store = resultModule();
     const welcome = welcomeScreen();
-    const loop = loopWithEmotionsSimpleWidget(images, 'zbadaj reakcje');
-    //TODO - dodaj saveResults
+    const loopSimple = loopWithEmotionsSimpleWidget(images, store);
+    const loopArousal = loopWithValenceArousaleWidget(images, store);
+    
 
-    experiment = new lab.flow.Sequence({ content: [ loop ]});
+    experiment = new lab.flow.Sequence({ content: [ loopSimple, loopArousal ]});
+    experiment.on('end', () => {
+      store.downloadResult();
+    });
   }
   
   function startExperiment() {
