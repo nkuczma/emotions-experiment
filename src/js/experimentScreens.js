@@ -2,6 +2,10 @@ const lab = require('lab.js/dist/lab.dev.js');
 import { EmotionScale} from './response-widgets/emotion-scale.js';
 import { ValenceArousal } from './response-widgets/valence-arousal.js';
 
+let currentTimeOfImage;
+let currentTimeOfWidget;
+let index = 0;
+let user = {};
 
 export function welcomeScreen() {
 
@@ -43,7 +47,7 @@ export function welcomeScreen() {
 
 }
 
-export function loopWithValenceArousaleWidget(loopImages, store) {
+export function loopWithValenceArousaleWidget(loopImages, store, user) {
 
   const loopSequence =  new lab.flow.Sequence({
     content: [
@@ -55,14 +59,26 @@ export function loopWithValenceArousaleWidget(loopImages, store) {
         content: '<img class="img-fluid" src="${ parameters.image }">',
         timeout: 2000,
         messageHandlers: {
-          'run': function() { console.log('show photo');} }
+          'run': function() { currentTimeOfImage = new Date(); } }
       }),
       new lab.html.Screen({
         content: '<div id="valence-arousal"></div>',
         timeout: 2000,
         messageHandlers: {
           'run': function() {
-
+            currentTimeOfWidget = new Date();
+            store.setResult({
+              'user_id': user.id,
+              'index': index,
+              'condition': 'inc',
+              'condition_detail': 'p-s+',
+              'sound_id': '213',
+              'image_id': this.parent.options.parameters.imageName,
+              'widget_name': 'emoscale1',
+              'response_value': 'None',
+              'response_time': 'None',
+              'show_image_timestamp': currentTimeOfImage.getTime()
+            });
             // initialize widget
             let valenceArousal = new ValenceArousal();
             let valenceValue = 0;
@@ -70,14 +86,20 @@ export function loopWithValenceArousaleWidget(loopImages, store) {
 
             valenceArousal.onChange((value) => {
               store.setResult({
-                'imageUrl': this.parent.options.parameters.imageName,
-                'valence': value.valence,
-                'arousal': value.arousal,
+                'user_id': user.id,
+                'index': index,
+                'condition': 'inc',
+                'condition_detail': 'p-s+',
+                'sound_id': '213',
+                'image_id': this.parent.options.parameters.imageName,
+                'widget_name': 'emospace1',
+                'response_value': [value.valence, value.arousal],
+                'response_time': (new Date() - currentTimeOfWidget)/1000,
+                'show_image_timestamp': currentTimeOfImage.getTime()
               });
             });
-
             valenceArousal.init(window.document.getElementById('valence-arousal'));
-
+            index++;
           },
           'end': () => {
             store.updateResult();
@@ -95,7 +117,7 @@ export function loopWithValenceArousaleWidget(loopImages, store) {
   return experiment;
 }
 
-export function loopWithEmotionsSimpleWidget(loopImages, store) {
+export function loopWithEmotionsSimpleWidget(loopImages, store, user) {
 
   const loopSequence =  new lab.flow.Sequence({
     content: [
@@ -107,22 +129,44 @@ export function loopWithEmotionsSimpleWidget(loopImages, store) {
         content: '<img class="img-fluid" src="${ parameters.image }">',
         timeout: 2000,
         messageHandlers: {
-          'run': function() { console.log('show photo');} }
+          'run': function() { currentTimeOfImage = new Date(); } }
       }),
       new lab.html.Screen({
         content: '<div id="emotion-input" class="emotion-scale center vertical"></div>',
         messageHandlers: {
           'run': function() {
+            currentTimeOfWidget = new Date();
             let emotionScale = new EmotionScale();
+            store.setResult({
+              'user_id': user.id,
+              'index': index,
+              'condition': 'inc',
+              'condition_detail': 'p-s+',
+              'sound_id': '213',
+              'image_id': this.parent.options.parameters.imageName,
+              'widget_name': 'emoscale1',
+              'response_value': 'None',
+              'response_time': 'None',
+              'show_image_timestamp': currentTimeOfImage.getTime()
+            });
             emotionScale.setAssetsDirectory('../../assets/emotions-simple/');
+            
             emotionScale.onChange((result) => {
               store.setResult({
-                'imageUrl': this.parent.options.parameters.imageName,
-                'emotion': result,
+                'user_id': user.id,
+                'index': index,
+                'condition': 'inc',
+                'condition_detail': 'p-s+',
+                'sound_id': '213',
+                'image_id': this.parent.options.parameters.imageName,
+                'widget_name': 'emoscale1',
+                'response_value': result,
+                'response_time': (new Date() - currentTimeOfWidget)/1000,
+                'show_image_timestamp': currentTimeOfImage.getTime()
               });
             });
-  
             emotionScale.init(window.document.getElementById('emotion-input'));
+            index++;
           },
           'end': () => {
             store.updateResult();
