@@ -7,6 +7,39 @@ let currentTimeOfWidget;
 let index = 0;
 let user = {};
 
+export function getUserDataScreen(saveUserData) {
+  return new lab.flow.Sequence({
+    content: [
+      new lab.html.Screen({
+        content:
+          '<div id="form" class="form-group d-flex">' +
+          '  <div><label for="id">ID:</label>' +
+          '  <input name="id" id="id" required /></div>' +
+          '  <div><label for="sex">Sex:</label>' +
+          '  <input name="sex" id="sex" required /><div>' +
+          '  <div><label for="age">Age:</label>' +
+          '  <input name="age" id="age" required /><div>' +
+          '  <button id="submit" form="form" class="btn btn-light m-2">Zatwierdź</button>' +
+          '</div>',
+          messageHandlers: {
+            'run': function() {
+              var button = document.getElementById('submit');
+              button.addEventListener('click', ( event ) => {
+                let id = document.getElementById('id').value;
+                let sex = document.getElementById('sex').value;
+                let age = document.getElementById('age').value;
+                saveUserData({ id, sex, age});
+              });
+            },
+          },
+          responses: {
+            'click button#submit': 'submit',
+          }
+      })
+    ]
+  });
+}
+
 export function welcomeScreen() {
 
   return new lab.flow.Sequence({
@@ -56,7 +89,7 @@ export function loopWithValenceArousaleWidget(loopImages, store, user) {
         timeout: 500,
       }),
       new lab.html.Screen({
-        content: '<img class="img-fluid" src="${ parameters.image }">',
+        content: '<img class="img-fluid" src="assets/img/${ parameters.image }">',
         timeout: 2000,
         messageHandlers: {
           'run': function() { currentTimeOfImage = new Date(); } }
@@ -70,10 +103,10 @@ export function loopWithValenceArousaleWidget(loopImages, store, user) {
             store.setResult({
               'user_id': user.id,
               'index': index,
-              'condition': 'inc',
-              'condition_detail': 'p-s+',
-              'sound_id': '213',
-              'image_id': this.parent.options.parameters.imageName,
+              'condition': this.parent.options.parameters.condition,
+              'condition_detail': this.parent.options.parameters.condition_detail,
+              'sound_id': this.parent.options.parameters.sound,
+              'image_id': this.parent.options.parameters.image,
               'widget_name': 'emoscale1',
               'response_value': 'None',
               'response_time': 'None',
@@ -88,10 +121,10 @@ export function loopWithValenceArousaleWidget(loopImages, store, user) {
               store.setResult({
                 'user_id': user.id,
                 'index': index,
-                'condition': 'inc',
-                'condition_detail': 'p-s+',
-                'sound_id': '213',
-                'image_id': this.parent.options.parameters.imageName,
+                'condition': this.parent.options.parameters.condition,
+                'condition_detail': this.parent.options.parameters.condition_detail,
+                'sound_id': this.parent.options.parameters.sound,
+                'image_id': this.parent.options.parameters.image,
                 'widget_name': 'emospace1',
                 'response_value': [value.valence, value.arousal],
                 'response_time': (new Date() - currentTimeOfWidget)/1000,
@@ -126,7 +159,7 @@ export function loopWithEmotionsSimpleWidget(loopImages, store, user) {
         timeout: 500,
       }),
       new lab.html.Screen({
-        content: '<img class="img-fluid" src="${ parameters.image }">',
+        content: '<img class="img-fluid" src="assets/img/${ parameters.image }">',
         timeout: 2000,
         messageHandlers: {
           'run': function() { currentTimeOfImage = new Date(); } }
@@ -135,15 +168,17 @@ export function loopWithEmotionsSimpleWidget(loopImages, store, user) {
         content: '<div id="emotion-input" class="emotion-scale center vertical"></div>',
         messageHandlers: {
           'run': function() {
+            console.log('user');
+            console.log(user);
             currentTimeOfWidget = new Date();
             let emotionScale = new EmotionScale();
             store.setResult({
               'user_id': user.id,
               'index': index,
-              'condition': 'inc',
-              'condition_detail': 'p-s+',
-              'sound_id': '213',
-              'image_id': this.parent.options.parameters.imageName,
+              'condition': this.parent.options.parameters.condition,
+              'condition_detail': this.parent.options.parameters.condition_detail,
+              'sound_id': this.parent.options.parameters.sound,
+              'image_id': this.parent.options.parameters.image,
               'widget_name': 'emoscale1',
               'response_value': 'None',
               'response_time': 'None',
@@ -155,10 +190,10 @@ export function loopWithEmotionsSimpleWidget(loopImages, store, user) {
               store.setResult({
                 'user_id': user.id,
                 'index': index,
-                'condition': 'inc',
-                'condition_detail': 'p-s+',
-                'sound_id': '213',
-                'image_id': this.parent.options.parameters.imageName,
+                'condition': this.parent.options.parameters.condition,
+                'condition_detail': this.parent.options.parameters.condition_detail,
+                'sound_id': this.parent.options.parameters.sound,
+                'image_id': this.parent.options.parameters.image,
                 'widget_name': 'emoscale1',
                 'response_value': result,
                 'response_time': (new Date() - currentTimeOfWidget)/1000,

@@ -8,9 +8,8 @@ import ExperimentModule from './js/experiment';
 console.log("I'm alive");
 
 let cam = CameraModule();
-cam.initializeCamera();
-cam.setTimeoutForPhotos(3000);
+// cam.initializeCamera();
+// cam.setTimeoutForPhotos(3000);
 
 let experiment = ExperimentModule();
-experiment.initializeExperiment();
 experiment.startExperiment();
