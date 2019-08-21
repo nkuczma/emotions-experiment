@@ -6,6 +6,7 @@ let currentTimeOfImage;
 let currentTimeOfWidget;
 let index = 0;
 let user = {};
+let intervalForTakingPhotos = 3000;
 
 export function getUserDataScreen(saveUserData) {
   return new lab.flow.Sequence({
@@ -15,7 +16,7 @@ export function getUserDataScreen(saveUserData) {
           '<div id="form" class="form-group d-flex">' +
           '  <div><label for="id">ID:</label>' +
           '  <input name="id" id="id" required /></div>' +
-          '  <div><label for="sex">Sex:</label>' +
+          '  <div><label for="sex">Płeć:</label>' +
           '  <input name="sex" id="sex" required /><div>' +
           '  <div><label for="age">Age:</label>' +
           '  <input name="age" id="age" required /><div>' +
@@ -77,22 +78,28 @@ export function welcomeScreen() {
       })
     ]
   });
-
 }
 
-export function loopWithValenceArousaleWidget(loopImages, store, user) {
+export function loopWithValenceArousaleWidget(loopImages, store, user, camera) {
 
   const loopSequence =  new lab.flow.Sequence({
     content: [
       new lab.html.Screen({
-        content: '.',
-        timeout: 500,
-      }),
-      new lab.html.Screen({
         content: '<img class="img-fluid" src="assets/img/${ parameters.image }">',
-        timeout: 2000,
+        timeout: 6000,
         messageHandlers: {
-          'run': function() { currentTimeOfImage = new Date(); } }
+          'before:prepare': function() {
+            const sound = document.createElement('audio');
+            sound.src = `assets/sounds/${this.parent.options.parameters.sound}`;
+            sound.volume = 0.5;
+            this.internals.sound = sound;
+          },
+          'run': function() { 
+            currentTimeOfImage = new Date(); 
+            this.internals.sound.play();
+            this.internals.interval = camera.setIntervalForPhotos(intervalForTakingPhotos);
+          }
+        }
       }),
       new lab.html.Screen({
         content: '<div id="valence-arousal"></div>',
@@ -100,42 +107,36 @@ export function loopWithValenceArousaleWidget(loopImages, store, user) {
         messageHandlers: {
           'run': function() {
             currentTimeOfWidget = new Date();
-            store.setResult({
-              'user_id': user.id,
-              'index': index,
-              'condition': this.parent.options.parameters.condition,
-              'condition_detail': this.parent.options.parameters.condition_detail,
-              'sound_id': this.parent.options.parameters.sound,
-              'image_id': this.parent.options.parameters.image,
-              'widget_name': 'emoscale1',
-              'response_value': 'None',
-              'response_time': 'None',
-              'show_image_timestamp': currentTimeOfImage.getTime()
-            });
-            // initialize widget
+            store.setResult(
+              formatExperimentData(
+                user, 
+                index,
+                this.parent.options.parameters, 
+                'emoscpace', 
+                currentTimeOfImage.getTime(), 
+                {value: 'None', time: 'None'}
+              )
+            );
             let valenceArousal = new ValenceArousal();
-            let valenceValue = 0;
-            let arousalValue = 0;
 
             valenceArousal.onChange((value) => {
-              store.setResult({
-                'user_id': user.id,
-                'index': index,
-                'condition': this.parent.options.parameters.condition,
-                'condition_detail': this.parent.options.parameters.condition_detail,
-                'sound_id': this.parent.options.parameters.sound,
-                'image_id': this.parent.options.parameters.image,
-                'widget_name': 'emospace1',
-                'response_value': [value.valence, value.arousal],
-                'response_time': (new Date() - currentTimeOfWidget)/1000,
-                'show_image_timestamp': currentTimeOfImage.getTime()
-              });
+              store.setResult(
+                formatExperimentData(
+                  user, 
+                  index,
+                  this.parent.options.parameters, 
+                  'emospace', 
+                  currentTimeOfImage.getTime(), 
+                  { value: [value.valence, value.arousal], time: (new Date() - currentTimeOfWidget)/1000 }
+                )
+              );
             });
             valenceArousal.init(window.document.getElementById('valence-arousal'));
             index++;
           },
           'end': () => {
             store.updateResult();
+            console.log('koniec petli')
           }
         },
       })
@@ -150,55 +151,60 @@ export function loopWithValenceArousaleWidget(loopImages, store, user) {
   return experiment;
 }
 
-export function loopWithEmotionsSimpleWidget(loopImages, store, user) {
+export function loopWithEmotionsSimpleWidget(loopImages, store, user, camera) {
 
   const loopSequence =  new lab.flow.Sequence({
     content: [
       new lab.html.Screen({
-        content: '.',
-        timeout: 500,
-      }),
-      new lab.html.Screen({
         content: '<img class="img-fluid" src="assets/img/${ parameters.image }">',
-        timeout: 2000,
+        timeout: 6000,
         messageHandlers: {
-          'run': function() { currentTimeOfImage = new Date(); } }
+          'before:prepare': function() {
+            const sound = document.createElement('audio');
+            sound.src = `assets/sounds/${this.parent.options.parameters.sound}`;
+            sound.volume = 0.5;
+            this.internals.sound = sound;
+          },
+          'run': function() { 
+            currentTimeOfImage = new Date(); 
+            this.internals.sound.play();
+            this.internals.interval = camera.setIntervalForPhotos(intervalForTakingPhotos);
+
+          },
+          'end': function() { 
+            camera.stopIntervalForPhotos(this.internals.interval);
+          }
+        }
       }),
       new lab.html.Screen({
         content: '<div id="emotion-input" class="emotion-scale center vertical"></div>',
         messageHandlers: {
           'run': function() {
-            console.log('user');
-            console.log(user);
             currentTimeOfWidget = new Date();
             let emotionScale = new EmotionScale();
-            store.setResult({
-              'user_id': user.id,
-              'index': index,
-              'condition': this.parent.options.parameters.condition,
-              'condition_detail': this.parent.options.parameters.condition_detail,
-              'sound_id': this.parent.options.parameters.sound,
-              'image_id': this.parent.options.parameters.image,
-              'widget_name': 'emoscale1',
-              'response_value': 'None',
-              'response_time': 'None',
-              'show_image_timestamp': currentTimeOfImage.getTime()
-            });
+            store.setResult(
+              formatExperimentData(
+                user, 
+                index,
+                this.parent.options.parameters, 
+                'emoscale1', 
+                currentTimeOfImage.getTime(), 
+                {value: 'None', time: 'None'}
+              )
+            );
             emotionScale.setAssetsDirectory('../../assets/emotions-simple/');
             
             emotionScale.onChange((result) => {
-              store.setResult({
-                'user_id': user.id,
-                'index': index,
-                'condition': this.parent.options.parameters.condition,
-                'condition_detail': this.parent.options.parameters.condition_detail,
-                'sound_id': this.parent.options.parameters.sound,
-                'image_id': this.parent.options.parameters.image,
-                'widget_name': 'emoscale1',
-                'response_value': result,
-                'response_time': (new Date() - currentTimeOfWidget)/1000,
-                'show_image_timestamp': currentTimeOfImage.getTime()
-              });
+              store.setResult(
+                formatExperimentData(
+                  user, 
+                  index,
+                  this.parent.options.parameters, 
+                  'emoscale', 
+                  currentTimeOfImage.getTime(), 
+                  { value: result, time: (new Date() - currentTimeOfWidget)/1000 }
+                )
+              );
             });
             emotionScale.init(window.document.getElementById('emotion-input'));
             index++;
@@ -208,9 +214,6 @@ export function loopWithEmotionsSimpleWidget(loopImages, store, user) {
           }
         },
         timeout: 2000,
-        responses: {
-          'click button#submit': 'submit',
-        }
       })
     ]
   });
@@ -223,3 +226,18 @@ export function loopWithEmotionsSimpleWidget(loopImages, store, user) {
   return experiment;
 }
 
+
+function formatExperimentData(user, index, stimuliData, widgetName, timeOfImage, response) {
+  return {
+    'user_id': user.id,
+    'index': index,
+    'condition': stimuliData.condition,
+    'condition_detail': stimuliData.condition_detail,
+    'sound_id': stimuliData.sound,
+    'image_id': stimuliData.image,
+    'widget_name': widgetName,
+    'response_value': response.value,
+    'response_time': response.time,
+    'show_image_timestamp': timeOfImage
+  }
+}

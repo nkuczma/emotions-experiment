@@ -43,4 +43,7 @@ module.exports = {
         new CopyWebpackPlugin([ { from: 'src/assets', to: 'assets' } ])
     ],
     devtool: 'inline-source-map',
+    node: {
+        fs: "empty"
+     }
 };

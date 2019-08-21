@@ -1,10 +1,12 @@
+import { setS3, setDropbox } from './fileService';
+
 function cameraModule() {
 
   let videoElement = document.querySelector('video');
   let videoSelect = document.querySelector('#videoSource');
 
   function initializeCamera() {
-    
+
     navigator.mediaDevices.enumerateDevices()
       .then(gotDevices).then(getStream).catch(handleError);
 
@@ -56,21 +58,30 @@ function cameraModule() {
     canvas.height = videoElement.videoHeight;
     canvas.getContext('2d').drawImage(videoElement, 0, 0);
     var img = canvas.toDataURL('image/jpeg');
+    setDropbox(img);
     console.log(img);
   }
 
-  function setTimeoutForPhotos(time) {
+  function setIntervalForPhotos(time) {
     let x = 0;
-    setInterval(function(){ 
+    let interval = setInterval(function(){ 
       takePhoto();
       x++; console.log(x); 
       $('#results').html(x);
     }, time);
+
+    //rob zdjecia i zapisuj do w datastore
+    return interval;
+  }
+
+  function stopIntervalForPhotos(interval){
+    clearInterval(interval);
   }
 
   return {
     initializeCamera,
-    setTimeoutForPhotos
+    setIntervalForPhotos,
+    stopIntervalForPhotos
   }
 }
 export default cameraModule;

@@ -1,27 +1,23 @@
 [
   {
-    "id": 0,
     "image": "Car.jpg",
     "sound": "225.wav",
     "condition": "con",
     "condition_detail": "p0s0"
   },
   {
-    "id": 1,
     "image": "Dog.jpg",
     "sound": "322.wav",
     "condition": "con",
     "condition_detail": "p+s+"
   },
   {
-    "id": 2,
     "image": "Explosion.jpg",
     "sound": "361.wav",
     "condition": "inc",
     "condition_detail": "p+s-"
   },
   {
-    "id": 3,
     "image": "Hang_gliding.jpg",
     "sound": "377.wav",
     "condition": "inc",

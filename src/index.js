@@ -5,11 +5,12 @@ import 'lab.js/dist/lab.css';
 import CameraModule from './js/camera';
 import ExperimentModule from './js/experiment';
 
+
 console.log("I'm alive");
 
 let cam = CameraModule();
-// cam.initializeCamera();
+cam.initializeCamera();
 // cam.setTimeoutForPhotos(3000);
 
-let experiment = ExperimentModule();
+let experiment = ExperimentModule(cam);
 experiment.startExperiment();

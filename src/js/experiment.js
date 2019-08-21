@@ -4,13 +4,14 @@ import { userModule } from './userModule.js';
 import { welcomeScreen, loopWithEmotionsSimpleWidget, loopWithValenceArousaleWidget, getUserDataScreen } from './experimentScreens.js';
 let pairs = require('./pairs/pairs.json');
 
+
 // function importAll(r) {
 //   return r.keys().map(r).map((image, i) => { 
 //     return {image: image, value: i, imageName: r.keys()[i]}; 
 //   });
 // }
 
-function experimentModule() {
+function experimentModule(camera) {
   
   const random = new lab.util.Random();
   // const imagesList = importAll(require.context('./../assets/img', false, /\.(png|jpe?g|svg)$/));
@@ -35,20 +36,21 @@ function experimentModule() {
     console.log(pairs);
 
     const welcome = welcomeScreen();
-    const loopSimple = loopWithEmotionsSimpleWidget(pairs.firstPart, store, user.getUserData());
-    const loopArousal = loopWithValenceArousaleWidget(pairs.secondPart, store, user.getUserData());
-    const widgetOrder = random.shuffle([loopSimple, loopArousal]);
+    const loopSimple = loopWithEmotionsSimpleWidget(pairs.firstPart, store, user.getUserData(), camera);
+    const loopArousal = loopWithValenceArousaleWidget(pairs.secondPart, store, user.getUserData(), camera);
+    // const widgetOrder = random.shuffle([loopSimple, loopArousal]);
+    const widgetOrder = random.shuffle([loopSimple]);
 
+    //glowny eksperyment
     experiment = new lab.flow.Sequence({ content:  widgetOrder });
     experiment.on('end', () => {
-      store.downloadResult();
-      user.downloadUserData();
+      // store.downloadResult();
+      // user.downloadUserData();
     });
 
     experiment.run();
     getPairs();
   }
-  
 
   function getPairs() {
     let pairsShuffled = random.shuffle(pairs);
@@ -57,7 +59,6 @@ function experimentModule() {
     let secondPart = pairsShuffled.slice(half, pairsShuffled.length);
     return { firstPart, secondPart };
   }
-
   return { 
     startExperiment 
   }
