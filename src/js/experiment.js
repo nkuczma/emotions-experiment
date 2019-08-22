@@ -11,7 +11,7 @@ let pairs = require('./pairs/pairs.json');
 //   });
 // }
 
-function experimentModule(camera) {
+function experimentModule(camera, emotionsFromFaceStore) {
   
   const random = new lab.util.Random();
   // const imagesList = importAll(require.context('./../assets/img', false, /\.(png|jpe?g|svg)$/));
@@ -30,6 +30,7 @@ function experimentModule(camera) {
   }
   
   function runExperiment(user) {
+
     const store = resultModule();
 
     const pairs = getPairs();
@@ -44,8 +45,9 @@ function experimentModule(camera) {
     //glowny eksperyment
     experiment = new lab.flow.Sequence({ content:  widgetOrder });
     experiment.on('end', () => {
-      // store.downloadResult();
-      // user.downloadUserData();
+      store.downloadResult();
+      emotionsFromFaceStore.downloadResult();
+      user.downloadUserData();
     });
 
     experiment.run();

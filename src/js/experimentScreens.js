@@ -80,6 +80,20 @@ export function welcomeScreen() {
   });
 }
 
+export function gameScreen() {
+  return new lab.html.Screen({
+    content: '<p>Po zakończeniu gry, kliknij aby kontynuować</p>',
+    messageHandlers: {
+      'run': function() {
+        console.log('wlacz gre');
+      },
+    },
+    responses: {
+      'click': 'A mouse click was recorded',
+    }
+  });
+}
+
 export function loopWithValenceArousaleWidget(loopImages, store, user, camera) {
 
   const loopSequence =  new lab.flow.Sequence({

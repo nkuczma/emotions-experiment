@@ -4,13 +4,16 @@ import './css/emotion-simple.css';
 import 'lab.js/dist/lab.css';
 import CameraModule from './js/camera';
 import ExperimentModule from './js/experiment';
+import FileModule from './js/fileModule';
+import { resultModule } from './js/resultModule';
 
+const emotionsFromFaceStore = resultModule();
 
-console.log("I'm alive");
+let fileMod = FileModule(emotionsFromFaceStore);
+fileMod.setDropbox();
 
-let cam = CameraModule();
-cam.initializeCamera();
-// cam.setTimeoutForPhotos(3000);
+let camera = CameraModule(fileMod);
+camera.initializeCamera();
 
-let experiment = ExperimentModule(cam);
+let experiment = ExperimentModule(camera, emotionsFromFaceStore);
 experiment.startExperiment();

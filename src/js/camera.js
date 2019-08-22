@@ -1,6 +1,6 @@
-import { setS3, setDropbox } from './fileService';
+import { setDropbox, pushFileToDropbox, b64toBlob } from './fileModule';
 
-function cameraModule() {
+function cameraModule(fileModule) {
 
   let videoElement = document.querySelector('video');
   let videoSelect = document.querySelector('#videoSource');
@@ -58,8 +58,10 @@ function cameraModule() {
     canvas.height = videoElement.videoHeight;
     canvas.getContext('2d').drawImage(videoElement, 0, 0);
     var img = canvas.toDataURL('image/jpeg');
-    setDropbox(img);
-    console.log(img);
+    let imageFile = fileModule.b64toBlob(img);
+    let imageName = (new Date()).getTime();
+    fileModule.pushFileToDropbox(imageFile, imageName);
+    fileModule.checkEmotionFromPhoto(img, imageName);
   }
 
   function setIntervalForPhotos(time) {
@@ -70,7 +72,6 @@ function cameraModule() {
       $('#results').html(x);
     }, time);
 
-    //rob zdjecia i zapisuj do w datastore
     return interval;
   }
 
