@@ -38,7 +38,7 @@ function experimentModule(camera, fileModule) {
     const gameFreud = gameScreen("freud-me-out-affective://freud-me-out-host", camera, emotionsFromFaceStore);
 
     //glowny eksperyment
-    experiment = new lab.flow.Sequence({ content:  [ welcome, widgetOrder[0], gameSpace, widgetOrder[1], gameFreud, goodbye });
+    experiment = new lab.flow.Sequence({ content:  [ welcome, widgetOrder[0], gameSpace, widgetOrder[1], gameFreud, goodbye ]});
     experiment.on('end', () => {
       // store.downloadResult();
       // emotionsFromFaceStore.downloadResult();
