@@ -15,5 +15,9 @@ export function resultModule() {
     store.download();
   }
 
-  return { setResult, updateResult, downloadResult }
+  function exportCsv() {
+    return store.exportCsv('; ');
+  }
+
+  return { setResult, updateResult, downloadResult, exportCsv }
 }

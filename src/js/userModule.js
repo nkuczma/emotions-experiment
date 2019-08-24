@@ -19,5 +19,9 @@ export function userModule(){
     userStore.download();
   }
 
-  return { setUserData, getUserData, downloadUserData };
+  function exportCsv() {
+    return userStore.exportCsv('; ');
+  }
+
+  return { setUserData, getUserData, downloadUserData, exportCsv };
 }

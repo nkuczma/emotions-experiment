@@ -2,18 +2,16 @@
 import './css/index.css';
 import './css/emotion-simple.css';
 import 'lab.js/dist/lab.css';
-import CameraModule from './js/camera';
-import ExperimentModule from './js/experiment';
+import CameraModule from './js/cameraModule';
+import ExperimentModule from './js/experimentModule';
 import FileModule from './js/fileModule';
-import { resultModule } from './js/resultModule';
 
-const emotionsFromFaceStore = resultModule();
 
-let fileMod = FileModule(emotionsFromFaceStore);
+let fileMod = FileModule();
 fileMod.setDropbox();
 
 let camera = CameraModule(fileMod);
 camera.initializeCamera();
 
-let experiment = ExperimentModule(camera, emotionsFromFaceStore);
+let experiment = ExperimentModule(camera, fileMod);
 experiment.startExperiment();

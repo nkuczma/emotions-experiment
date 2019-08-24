@@ -7,13 +7,14 @@ let currentTimeOfWidget;
 let index = 0;
 let user = {};
 let intervalForTakingPhotos = 3000;
+let intervalForGame = 10000;
 
 export function getUserDataScreen(saveUserData) {
   return new lab.flow.Sequence({
     content: [
       new lab.html.Screen({
         content:
-          '<div id="form" class="form-group d-flex">' +
+          '<div id="form" class="form-group">' +
           '  <div><label for="id">ID:</label>' +
           '  <input name="id" id="id" required /></div>' +
           '  <div><label for="sex">Płeć:</label>' +
@@ -32,6 +33,10 @@ export function getUserDataScreen(saveUserData) {
                 saveUserData({ id, sex, age});
               });
             },
+            'end': function() {
+              let cameraInputElement = document.getElementById('camera-input');
+              cameraInputElement.setAttribute("style", "display: none;"); 
+            }
           },
           responses: {
             'click button#submit': 'submit',
@@ -80,13 +85,31 @@ export function welcomeScreen() {
   });
 }
 
-export function gameScreen() {
+export function goodbyeScreen() {
+
+  return new lab.flow.Sequence({
+    content: [
+      new lab.html.Screen({
+        content: '<p>Dziękujemy za udział w eksperymencie</p>'
+      })
+    ]
+  });
+}
+
+export function gameScreen(link, camera, emotionsFromFaceStore) {
   return new lab.html.Screen({
     content: '<p>Po zakończeniu gry, kliknij aby kontynuować</p>',
     messageHandlers: {
       'run': function() {
-        console.log('wlacz gre');
+        // let gameLink = document.getElementById('game-link');
+        // gameLink.href = link;
+        // gameLink.click();
+        window.open(link);
+        this.internals.intervalGame = camera.setIntervalForPhotos(intervalForGame, emotionsFromFaceStore);
       },
+      'end': function() { 
+        camera.stopIntervalForPhotos(this.internals.intervalGame);
+      }
     },
     responses: {
       'click': 'A mouse click was recorded',
@@ -94,7 +117,7 @@ export function gameScreen() {
   });
 }
 
-export function loopWithValenceArousaleWidget(loopImages, store, user, camera) {
+export function loopWithValenceArousaleWidget(loopImages, store, emotionsFromFaceStore, user, camera) {
 
   const loopSequence =  new lab.flow.Sequence({
     content: [
@@ -111,7 +134,10 @@ export function loopWithValenceArousaleWidget(loopImages, store, user, camera) {
           'run': function() { 
             currentTimeOfImage = new Date(); 
             this.internals.sound.play();
-            this.internals.interval = camera.setIntervalForPhotos(intervalForTakingPhotos);
+            this.internals.intervalArousal = camera.setIntervalForPhotos(intervalForTakingPhotos, emotionsFromFaceStore);
+          },
+          'end': function() { 
+            camera.stopIntervalForPhotos(this.internals.intervalArousal);
           }
         }
       }),
@@ -165,7 +191,7 @@ export function loopWithValenceArousaleWidget(loopImages, store, user, camera) {
   return experiment;
 }
 
-export function loopWithEmotionsSimpleWidget(loopImages, store, user, camera) {
+export function loopWithEmotionsSimpleWidget(loopImages, store, emotionsFromFaceStore, user, camera) {
 
   const loopSequence =  new lab.flow.Sequence({
     content: [
@@ -182,7 +208,7 @@ export function loopWithEmotionsSimpleWidget(loopImages, store, user, camera) {
           'run': function() { 
             currentTimeOfImage = new Date(); 
             this.internals.sound.play();
-            this.internals.interval = camera.setIntervalForPhotos(intervalForTakingPhotos);
+            this.internals.interval = camera.setIntervalForPhotos(intervalForTakingPhotos, emotionsFromFaceStore);
 
           },
           'end': function() { 

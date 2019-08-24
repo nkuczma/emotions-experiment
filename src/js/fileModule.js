@@ -1,8 +1,6 @@
-import experimentModule from './experiment';
-
 var Dropbox = require('dropbox').Dropbox;
 
-function fileModule(emotionsFromFaceStore) {
+function fileModule() {
   let dbx;
 
   function setDropbox() {
@@ -13,7 +11,7 @@ function fileModule(emotionsFromFaceStore) {
   }
 
   function pushFileToDropbox(file, filename) {
-    dbx.filesUpload({path: '/' + `${filename}.jpeg`, contents: file})
+    dbx.filesUpload({path: '/' + filename, contents: file})
     .catch(function(error) {
       console.error(error);
     });
@@ -48,7 +46,7 @@ function fileModule(emotionsFromFaceStore) {
     return blob;
   }
 
-  function checkEmotionFromPhoto(image, name) {
+  function checkEmotionFromPhoto(image, name, emotionsFromFaceStore) {
     var subscriptionKey = "02a92d3ef650497ea94000e535a32053";
     var uriBase = "https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect";
   

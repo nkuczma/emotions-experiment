@@ -52,24 +52,22 @@ function cameraModule(fileModule) {
     }
   }
 
-  function takePhoto(){
+  function takePhoto(emotionsFromFaceStore){
     const canvas = document.createElement('canvas');
     canvas.width = videoElement.videoWidth;
     canvas.height = videoElement.videoHeight;
     canvas.getContext('2d').drawImage(videoElement, 0, 0);
     var img = canvas.toDataURL('image/jpeg');
     let imageFile = fileModule.b64toBlob(img);
-    let imageName = (new Date()).getTime();
+    let imageName = `${(new Date()).getTime()}.jpeg`;
     fileModule.pushFileToDropbox(imageFile, imageName);
-    fileModule.checkEmotionFromPhoto(img, imageName);
+    fileModule.checkEmotionFromPhoto(img, imageName, emotionsFromFaceStore);
   }
 
-  function setIntervalForPhotos(time) {
+  function setIntervalForPhotos(time, emotionsFromFaceStore) {
     let x = 0;
     let interval = setInterval(function(){ 
-      takePhoto();
-      x++; console.log(x); 
-      $('#results').html(x);
+      takePhoto(emotionsFromFaceStore);
     }, time);
 
     return interval;
