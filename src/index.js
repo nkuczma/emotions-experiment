@@ -14,4 +14,4 @@ let camera = CameraModule(fileMod);
 camera.initializeCamera();
 
 let experiment = ExperimentModule(camera, fileMod);
-experiment.startExperiment();
+experiment.getUserData();

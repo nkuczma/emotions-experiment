@@ -1,26 +1,26 @@
 [
   {
-    "image": "Car.jpg",
-    "sound": "225.wav",
-    "condition": "con",
-    "condition_detail": "p0s0"
+    "image": "7078.jpg",
+    "sound": "374.wav",
+    "condition": "training",
+    "condition_detail": "training"
   },
   {
-    "image": "Dog.jpg",
-    "sound": "322.wav",
-    "condition": "con",
-    "condition_detail": "p+s+"
+    "image": "7547.jpg",
+    "sound": "708.wav",
+    "condition": "training",
+    "condition_detail": "training"
   },
   {
-    "image": "Explosion.jpg",
-    "sound": "361.wav",
-    "condition": "inc",
-    "condition_detail": "p+s-"
+    "image": "7705.jpg",
+    "sound": "250.wav",
+    "condition": "training",
+    "condition_detail": "training"
   },
   {
-    "image": "Hang_gliding.jpg",
-    "sound": "377.wav",
-    "condition": "inc",
-    "condition_detail": "p+s-"
+    "image": "7705.jpg",
+    "sound": "280.wav",
+    "condition": "training",
+    "condition_detail": "training"
   }
 ]

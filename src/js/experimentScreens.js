@@ -6,8 +6,8 @@ let currentTimeOfImage;
 let currentTimeOfWidget;
 let index = 0;
 let user = {};
-let intervalForTakingPhotos = 3000;
-let intervalForGame = 10000;
+let intervalForTakingPhotos = 333;
+let intervalForGame = 1000;
 
 export function getUserDataScreen(saveUserData) {
   return new lab.flow.Sequence({
@@ -19,7 +19,7 @@ export function getUserDataScreen(saveUserData) {
           '  <input name="id" id="id" required /></div>' +
           '  <div><label for="sex">Płeć:</label>' +
           '  <input name="sex" id="sex" required /><div>' +
-          '  <div><label for="age">Age:</label>' +
+          '  <div><label for="age">Wiek:</label>' +
           '  <input name="age" id="age" required /><div>' +
           '  <button id="submit" form="form" class="btn btn-light m-2">Zatwierdź</button>' +
           '</div>',
@@ -90,7 +90,8 @@ export function goodbyeScreen() {
   return new lab.flow.Sequence({
     content: [
       new lab.html.Screen({
-        content: '<p>Dziękujemy za udział w eksperymencie</p>'
+        content: '<p>Dziękujemy za udział w eksperymencie</p><p id="files-ready">Poczekaj na zapisanie wyników</p>',
+        timeout: 6000
       })
     ]
   });
@@ -143,7 +144,7 @@ export function loopWithValenceArousaleWidget(loopImages, store, emotionsFromFac
       }),
       new lab.html.Screen({
         content: '<div id="valence-arousal"></div>',
-        timeout: 2000,
+        timeout: 9000,
         messageHandlers: {
           'run': function() {
             currentTimeOfWidget = new Date();
@@ -176,7 +177,6 @@ export function loopWithValenceArousaleWidget(loopImages, store, emotionsFromFac
           },
           'end': () => {
             store.updateResult();
-            console.log('koniec petli')
           }
         },
       })
@@ -227,7 +227,7 @@ export function loopWithEmotionsSimpleWidget(loopImages, store, emotionsFromFace
                 user, 
                 index,
                 this.parent.options.parameters, 
-                'emoscale1', 
+                'emoscale', 
                 currentTimeOfImage.getTime(), 
                 {value: 'None', time: 'None'}
               )
@@ -253,7 +253,7 @@ export function loopWithEmotionsSimpleWidget(loopImages, store, emotionsFromFace
             store.updateResult();
           }
         },
-        timeout: 2000,
+        timeout: 9000,
       })
     ]
   });

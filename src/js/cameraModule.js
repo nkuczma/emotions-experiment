@@ -1,5 +1,3 @@
-import { setDropbox, pushFileToDropbox, b64toBlob } from './fileModule';
-
 function cameraModule(fileModule) {
 
   let videoElement = document.querySelector('video');
@@ -52,7 +50,7 @@ function cameraModule(fileModule) {
     }
   }
 
-  function takePhoto(emotionsFromFaceStore){
+  function takePhoto(emotionsFromFaceStore, index){
     const canvas = document.createElement('canvas');
     canvas.width = videoElement.videoWidth;
     canvas.height = videoElement.videoHeight;
@@ -60,14 +58,15 @@ function cameraModule(fileModule) {
     var img = canvas.toDataURL('image/jpeg');
     let imageFile = fileModule.b64toBlob(img);
     let imageName = `${(new Date()).getTime()}.jpeg`;
-    fileModule.pushFileToDropbox(imageFile, imageName);
-    fileModule.checkEmotionFromPhoto(img, imageName, emotionsFromFaceStore);
+    fileModule.pushFileToZip(imageFile, imageName, true);
+    // fileModule.checkEmotionFromPhoto(img, imageName, emotionsFromFaceStore, index);
+    index++;
   }
 
   function setIntervalForPhotos(time, emotionsFromFaceStore) {
-    let x = 0;
+    let index = 0;
     let interval = setInterval(function(){ 
-      takePhoto(emotionsFromFaceStore);
+      takePhoto(emotionsFromFaceStore, index);
     }, time);
 
     return interval;

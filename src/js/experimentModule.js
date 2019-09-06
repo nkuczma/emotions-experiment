@@ -2,7 +2,7 @@ const lab = require('lab.js/dist/lab.dev.js');
 import { resultModule } from './resultModule.js';
 import { userModule } from './userModule.js';
 import { welcomeScreen, goodbyeScreen, loopWithEmotionsSimpleWidget, loopWithValenceArousaleWidget, gameScreen, getUserDataScreen } from './experimentScreens.js';
-let pairs = require('./pairs/pairs.json');
+let pairs = require('./pairs/pairs-all.json');
 
 
 function experimentModule(camera, fileModule) {
@@ -10,7 +10,7 @@ function experimentModule(camera, fileModule) {
   const random = new lab.util.Random();
   let experiment;
 
-  function startExperiment() {
+  function getUserData() {
     const user = userModule();
     //najpierw pobranie danych uzytkownika, aby mozna bylo zapisywac jego id w wynikach
     const getUser = new lab.flow.Sequence({ content: [getUserDataScreen(user.setUserData)] });
@@ -39,14 +39,14 @@ function experimentModule(camera, fileModule) {
 
     //glowny eksperyment
     experiment = new lab.flow.Sequence({ content:  [ welcome, widgetOrder[0], gameSpace, widgetOrder[1], gameFreud, goodbye ]});
+
+    //zapisz wyniki
     experiment.on('end', () => {
-      // store.downloadResult();
-      // emotionsFromFaceStore.downloadResult();
-      // user.downloadUserData();
       let userId = user.getUserData().id;
-      fileModule.pushFileToDropbox(store.exportCsv(), `${userId}_experiment-result.csv`);
-      fileModule.pushFileToDropbox(emotionsFromFaceStore.exportCsv(), `${userId}_emotions-result.csv`);
-      fileModule.pushFileToDropbox(user.exportCsv(), `${userId}_user-data.csv`);
+      fileModule.pushFileToZip(store.exportCsv(), `${userId}_experiment-result.csv`, false);
+      fileModule.pushFileToZip(emotionsFromFaceStore.exportCsv(), `${userId}_emotions-result.csv`, false);
+      fileModule.pushFileToZip(user.exportCsv(), `${userId}_user-data.csv`, false);
+      fileModule.saveZipToDropbox(`result_${userId}.zip`);
     });
 
     experiment.run();
@@ -62,7 +62,7 @@ function experimentModule(camera, fileModule) {
   }
 
   return { 
-    startExperiment 
+    getUserData
   }
 
 }
