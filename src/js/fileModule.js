@@ -3,10 +3,6 @@ const fs = require('fs');
 var JSZip = require("jszip");
 
 
-
-var ClientID  = '328629123133-ncbr8aa6v180pgmig78ojtheubjh7aeg.apps.googleusercontent.com';
-var ClientSecret = 'xvAYQ9oKNhwl1o27TmTqY1M7';
-
 function fileModule() {
   let dbx;
   let sendList =[];
@@ -14,7 +10,7 @@ function fileModule() {
 
   function setDropbox() {
     dbx = new Dropbox({ 
-      accessToken: 'Jjw9dr17HzAAAAAAAAAAgUKgqqamtghp4JJNl3V9eIAonXve0VgyGbWOYiLpmPK8', 
+      accessToken: 'yourToken', 
       fetch: fetch 
     });
   }
@@ -26,7 +22,6 @@ function fileModule() {
   function saveZipToDropbox(zipName) {
     let resultInfo = document.getElementById('files-ready');
     zip.generateAsync({type:"blob"}).then(function(content) {
-      console.log('spakowane');
       dbx.filesUpload({path: '/' + zipName, contents: content})
         .then( function () {
           resultInfo.innerHTML = 'Pliki zostały zapisane';
@@ -41,8 +36,8 @@ function fileModule() {
 
   function checkEmotionFromPhoto(image, name, emotionsFromFaceStore) {
     if (index%4===0) {
-      var subscriptionKey = "02a92d3ef650497ea94000e535a32053";
-      var uriBase = "https://northeurope.api.cognitive.microsoft.com/face/v1.0/detect";
+      var subscriptionKey = "yourKey";
+      var uriBase = "yourUri";
     
       var params = {
           "returnFaceId": "true",

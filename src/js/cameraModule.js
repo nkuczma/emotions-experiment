@@ -60,6 +60,7 @@ function cameraModule(fileModule) {
     let imageName = `${(new Date()).getTime()}.jpeg`;
     fileModule.pushFileToZip(imageFile, imageName, true);
     // fileModule.checkEmotionFromPhoto(img, imageName, emotionsFromFaceStore, index);
+    //uncomment for real time emotion checking
     index++;
   }
 
