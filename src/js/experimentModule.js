@@ -2,7 +2,7 @@ const lab = require('lab.js/dist/lab.dev.js');
 import { resultModule } from './resultModule.js';
 import { userModule } from './userModule.js';
 import { welcomeScreen, goodbyeScreen, loopWithEmotionsSimpleWidget, loopWithValenceArousaleWidget, gameScreen, getUserDataScreen } from './experimentScreens.js';
-let pairs = require('./pairs/pairs-all.json');
+let pairs = require('./pairs/pairs.json');
 
 
 function experimentModule(camera, fileModule) {
@@ -16,6 +16,10 @@ function experimentModule(camera, fileModule) {
     const getUser = new lab.flow.Sequence({ content: [getUserDataScreen(user.setUserData)] });
     getUser.run();
     getUser.on('end', () => {
+      let hidden = document.getElementById("video");
+      hidden.style.display = "none";
+      let hiddenCanvas = document.getElementById("camera-canvas");
+      hiddenCanvas.style.display = "none";
       runExperiment(user)
     });
   }
